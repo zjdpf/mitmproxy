@@ -382,8 +382,8 @@ def build_pyinstaller(be: BuildEnviron):  # pragma: no cover
     # scripts and executables on Windows go in ENV\Scripts\ instead of ENV/bin/
     if platform.system() == "Windows":
         PYINSTALLER_ARGS = [
-            # PyInstaller < 3.2 does not handle Python 3.5's ucrt correctly.
-            "-p", r"C:\Program Files (x86)\Windows Kits\10\Redist\ucrt\DLLs\x86",
+            # PyInstaller does not handle the universal runtime by default.
+            "-p", os.path.abspath(os.path.join(be.release_dir, "ucrt", "x86")),
         ]
     else:
         PYINSTALLER_ARGS = []
