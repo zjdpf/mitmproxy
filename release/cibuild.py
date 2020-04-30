@@ -381,10 +381,12 @@ def build_pyinstaller(be: BuildEnviron):  # pragma: no cover
     # https://virtualenv.pypa.io/en/latest/userguide.html#windows-notes
     # scripts and executables on Windows go in ENV\Scripts\ instead of ENV/bin/
     if platform.system() == "Windows":
+        ucrt = (pathlib.Path(be.release_dir) / "ucrt" / "x86").resolve().absolute()
         PYINSTALLER_ARGS = [
-            # PyInstaller does not handle the universal runtime by default.
-            "-p", os.path.abspath(os.path.join(be.release_dir, "ucrt", "x86")),
+            "-p", str(ucrt),
         ]
+        for dll in ucrt.glob("*.dll"):
+            PYINSTALLER_ARGS += ["--add-binary", str(dll) + os.pathsep + "."]
     else:
         PYINSTALLER_ARGS = []
 
